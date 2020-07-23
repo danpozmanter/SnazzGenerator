@@ -36,7 +36,7 @@ SnazzGenerator allows you to generate that SQL programmatically through reflecti
 
 ```fsharp
 // Initialization code:
-let sql = getInsertStatement<Photo> (SnazzGen.Meta("Id"))
+let sql = SnazzGen<Photo>("Id").getInsertStatement()
 // App code:
 // Use the insert SQL
 ```
@@ -48,7 +48,7 @@ Custom table names:
 
 ```fsharp
 // Initialization code:
-let sql = getInsertStatement<Photo> (SnazzGen.MetaSetTable(PrimaryKey="Id", Table="photographs"))
+let sql = SnazzGen("Id", "photographs").getInsertStatement()
 // App code:
 // Use the insert SQL
 ```
@@ -57,14 +57,14 @@ Automatically setting "::bytea" for byte[]:
 
 ```fsharp
 // Initialization code:
-let sql = getInsertStatement<Photo> (SnazzGen.MetaSetBytea(PrimaryKey="Id", Table="photographs"))
+let sql = SnazzGen<Photo>("Id", ByteA=true).getInsertStatement()
 // App code:
 // Use the insert SQL
 ```
 
 ```fsharp
 // Initialization code:
-let sql = getInsertStatement<Photo> (SnazzGen.MetaSetTableBytea(PrimaryKey="Id", Table="photographs"))
+let sql = SnazzGen<Photo>("Id", "photographs", true).getInsertStatement()
 // App code:
 // Use the insert SQL
 ```

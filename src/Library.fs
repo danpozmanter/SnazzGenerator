@@ -1,51 +1,46 @@
 ﻿namespace SnazzGenerator
 
-module SnazzGen =
-    open System
-    open System.Collections.Generic
-    open System.Text
-    open System.Text.RegularExpressions
-    open System.Reflection
+//module Snazz =
+open System
+open System.Collections.Generic
+open System.Text
+open System.Text.RegularExpressions
+open System.Reflection
 
-    type SnazzMeta =
-        | Meta of PrimaryKey:string
-        | MetaSetBytea of PrimaryKey:string
-        | MetaSetTable of PrimaryKey:string * Table:string
-        | MetaSetTableBytea of PrimaryKey:string * Table:string
+type SnazzGen<'Type>(PrimaryKey:string, ?Table:string, ?SetByteA:bool) =
+    let CamelCasePattern = Regex(@"[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+")
+    let ValuesClausePattern = Regex(@"(?<= VALUES ).+")
 
-    let private CamelCasePattern = Regex(@"[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+")
-    let private ValuesClausePattern = Regex(@"(?<= VALUES ).+")
-
-    let private transformDotnetNameToSQL (propertyName:string) =
+    let transformDotnetNameToSQL (propertyName:string) =
         String.Join("_", CamelCasePattern.Matches(propertyName)).ToLower()
+    let typeInstance = typeof<'Type>
+    let Key = PrimaryKey
+    let TableName =
+        match Table with
+            | None -> transformDotnetNameToSQL typeInstance.Name
+            | Some("") -> transformDotnetNameToSQL typeInstance.Name
+            | Some(table) -> table
+    let ByteA =
+        match SetByteA with
+            | None -> false
+            | Some(bytea) -> bytea
 
-    let private getValueFromProperty (property:PropertyInfo) (bytea:bool) =
+    let getValueFromProperty (property:PropertyInfo) (bytea:bool) =
             if bytea && (property.PropertyType = typeof<Byte[]>) then
                 "@" + property.Name + "::bytea"
             else
                 "@" + property.Name
 
-    let private setMeta<'Type> (meta:SnazzMeta) =
-        let typeInstance = typeof<'Type>
-        match meta with
-            | MetaSetTable(key, table) -> (key, table, false)
-            | MetaSetTableBytea(key, table) -> (key, table, true)
-            | Meta(key) -> (key, (transformDotnetNameToSQL typeInstance.Name), false)
-            | MetaSetBytea(key) -> (key, (transformDotnetNameToSQL typeInstance.Name), true)
-
-    let buildInsert<'Type> (meta:SnazzMeta) =
-        let typeInstance = typeof<'Type>
-
-        let primaryKey, table, bytea = setMeta<'Type> meta
+    member this.buildInsert () =
         let props = typeInstance.GetProperties()
         let statement = StringBuilder()
-        let statement = statement.Append("INSERT INTO " + table)
+        let statement = statement.Append("INSERT INTO " + TableName)
         let fields = List<string>()
         let values = List<string>()
         for prop in props do
-            if prop.Name <> primaryKey then
+            if prop.Name <> Key then
                 fields.Add(transformDotnetNameToSQL prop.Name)
-                values.Add(getValueFromProperty prop bytea)
+                values.Add(getValueFromProperty prop ByteA)
 
         statement
             .Append(" (")
