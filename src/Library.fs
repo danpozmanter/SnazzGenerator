@@ -27,15 +27,17 @@ module SnazzGen =
             else
                 "@" + property.Name
 
+    let setMeta (typeInstance:Type) (meta:SnazzMeta) =
+        match meta with
+            | MetaSetTable(key, table) -> (key, table, false)
+            | MetaSetTableBytea(key, table) -> (key, table, true)
+            | Meta(key) -> (key, (transformDotnetNameToSQL typeInstance.Name), false)
+            | MetaSetBytea(key) -> (key, (transformDotnetNameToSQL typeInstance.Name), true)
+    
     let buildInsert (typeInstance:Type) (meta:SnazzMeta) =
         if (typeInstance = null) then
             raise (SnazzGenTypeError "Error: Type provided to mapper is null.")
-        let primaryKey, tableName, bytea =
-            match meta with
-                | MetaSetTable(key, table) -> (key, table, false)
-                | MetaSetTableBytea(key, table) -> (key, table, true)
-                | Meta(key) -> (key, (transformDotnetNameToSQL typeInstance.Name), false)
-                | MetaSetBytea(key) -> (key, (transformDotnetNameToSQL typeInstance.Name), true)
+        let primaryKey, tableName, bytea = setMeta typeInstance meta
         let props = typeInstance.GetProperties()
         let statement = StringBuilder()
         let statement = statement.Append("INSERT INTO " + tableName)
