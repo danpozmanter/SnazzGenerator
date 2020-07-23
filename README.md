@@ -36,7 +36,7 @@ SnazzGenerator allows you to generate that SQL programmatically through reflecti
 
 ```fsharp
 // Initialization code:
-let sql = getInsertStatement typeof<Photo> (SnazzGen.Meta("Id"))
+let sql = getInsertStatement<Photo> (SnazzGen.Meta("Id"))
 // App code:
 // Use the insert SQL
 ```
