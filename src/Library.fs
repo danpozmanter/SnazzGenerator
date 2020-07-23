@@ -14,15 +14,8 @@ type SnazzGen<'Type>(PrimaryKey:string, ?Table:string, ?SetByteA:bool) =
         String.Join("_", CamelCasePattern.Matches(propertyName)).ToLower()
     let typeInstance = typeof<'Type>
     let Key = PrimaryKey
-    let TableName =
-        match Table with
-            | None -> transformDotnetNameToSQL typeInstance.Name
-            | Some("") -> transformDotnetNameToSQL typeInstance.Name
-            | Some(table) -> table
-    let ByteA =
-        match SetByteA with
-            | None -> false
-            | Some(bytea) -> bytea
+    let TableName = defaultArg Table (transformDotnetNameToSQL typeInstance.Name)
+    let ByteA = defaultArg SetByteA false
 
     let getValueFromProperty (property:PropertyInfo) (bytea:bool) =
             if bytea && (property.PropertyType = typeof<Byte[]>) then
