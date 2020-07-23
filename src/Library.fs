@@ -1,6 +1,5 @@
 ﻿namespace SnazzGenerator
 
-//module Snazz =
 open System
 open System.Collections.Generic
 open System.Text
