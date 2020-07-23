@@ -44,22 +44,11 @@ let sql = getInsertStatement typeof<Photo> (SnazzGen.Meta("Id"))
 That's it. It will automatically remove the primary key field in this example: "Id". Optionally you can also set "::bytea" to be used for byte arrays.
 It's still advisable not to do the sql generation in a "hot" path, but rather during initialization.
 
-Supports bulk inserts:
-
-```fsharp
-// Initialization code:
-let sql = getInsertStatement typeof<Photo> "Id"
-// App code:
-// Something that gets you 100 objects
-let bulkSql = makeInsertBulk sql 100
-// Do the insert using bulkSql instead.
-```
-
 Custom table names:
 
 ```fsharp
 // Initialization code:
-let sql = getInsertStatement typeof<Photo> (SnazzGen.MetaSetTable(PrimaryKey="Id", TableName="photographs"))
+let sql = getInsertStatement<Photo> (SnazzGen.MetaSetTable(PrimaryKey="Id", TableName="photographs"))
 // App code:
 // Use the insert SQL
 ```
@@ -68,14 +57,14 @@ Automatically setting "::bytea" for byte[]:
 
 ```fsharp
 // Initialization code:
-let sql = getInsertStatement typeof<Photo> (SnazzGen.MetaSetBytea(PrimaryKey="Id", TableName="photographs"))
+let sql = getInsertStatement<Photo> (SnazzGen.MetaSetBytea(PrimaryKey="Id", TableName="photographs"))
 // App code:
 // Use the insert SQL
 ```
 
 ```fsharp
 // Initialization code:
-let sql = getInsertStatement typeof<Photo> (SnazzGen.MetaSetTableBytea(PrimaryKey="Id", TableName="photographs"))
+let sql = getInsertStatement<Photo> (SnazzGen.MetaSetTableBytea(PrimaryKey="Id", TableName="photographs"))
 // App code:
 // Use the insert SQL
 ```

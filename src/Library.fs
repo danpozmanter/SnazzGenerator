@@ -13,19 +13,19 @@ module SnazzGen =
         | MetaSetTable of PrimaryKey:string * TableName:string
         | MetaSetTableBytea of PrimaryKey:string * TableName:string
 
-    let CamelCasePattern = Regex(@"[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+")
-    let ValuesClausePattern = Regex(@"(?<= VALUES ).+")
+    let private CamelCasePattern = Regex(@"[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+")
+    let private ValuesClausePattern = Regex(@"(?<= VALUES ).+")
 
-    let transformDotnetNameToSQL (propertyName:string) =
+    let private transformDotnetNameToSQL (propertyName:string) =
         String.Join("_", CamelCasePattern.Matches(propertyName)).ToLower()
 
-    let getValueFromProperty (property:PropertyInfo) (bytea:bool) =
+    let private getValueFromProperty (property:PropertyInfo) (bytea:bool) =
             if bytea && (property.PropertyType = typeof<Byte[]>) then
                 "@" + property.Name + "::bytea"
             else
                 "@" + property.Name
 
-    let setMeta<'Type> (meta:SnazzMeta) =
+    let private setMeta<'Type> (meta:SnazzMeta) =
         let typeInstance = typeof<'Type>
         match meta with
             | MetaSetTable(key, table) -> (key, table, false)
@@ -54,7 +54,3 @@ module SnazzGen =
             .Append(String.Join(", ", values))
             .Append(")")
         |> string
-
-    let makeInsertBulk insertStatement rows =
-        let valuesClause = ValuesClausePattern.Match(insertStatement).Value
-        insertStatement + ", " + String.Join(", ", List.replicate (rows - 1) valuesClause) + ";"
