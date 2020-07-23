@@ -10,8 +10,8 @@ module SnazzGen =
     type SnazzMeta =
         | Meta of PrimaryKey:string
         | MetaSetBytea of PrimaryKey:string
-        | MetaSetTable of PrimaryKey:string * TableName:string
-        | MetaSetTableBytea of PrimaryKey:string * TableName:string
+        | MetaSetTable of PrimaryKey:string * Table:string
+        | MetaSetTableBytea of PrimaryKey:string * Table:string
 
     let private CamelCasePattern = Regex(@"[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+")
     let private ValuesClausePattern = Regex(@"(?<= VALUES ).+")
@@ -36,10 +36,10 @@ module SnazzGen =
     let buildInsert<'Type> (meta:SnazzMeta) =
         let typeInstance = typeof<'Type>
 
-        let primaryKey, tableName, bytea = setMeta<'Type> meta
+        let primaryKey, table, bytea = setMeta<'Type> meta
         let props = typeInstance.GetProperties()
         let statement = StringBuilder()
-        let statement = statement.Append("INSERT INTO " + tableName)
+        let statement = statement.Append("INSERT INTO " + table)
         let fields = List<string>()
         let values = List<string>()
         for prop in props do

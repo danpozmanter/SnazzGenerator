@@ -48,7 +48,7 @@ Custom table names:
 
 ```fsharp
 // Initialization code:
-let sql = getInsertStatement<Photo> (SnazzGen.MetaSetTable(PrimaryKey="Id", TableName="photographs"))
+let sql = getInsertStatement<Photo> (SnazzGen.MetaSetTable(PrimaryKey="Id", Table="photographs"))
 // App code:
 // Use the insert SQL
 ```
@@ -57,14 +57,14 @@ Automatically setting "::bytea" for byte[]:
 
 ```fsharp
 // Initialization code:
-let sql = getInsertStatement<Photo> (SnazzGen.MetaSetBytea(PrimaryKey="Id", TableName="photographs"))
+let sql = getInsertStatement<Photo> (SnazzGen.MetaSetBytea(PrimaryKey="Id", Table="photographs"))
 // App code:
 // Use the insert SQL
 ```
 
 ```fsharp
 // Initialization code:
-let sql = getInsertStatement<Photo> (SnazzGen.MetaSetTableBytea(PrimaryKey="Id", TableName="photographs"))
+let sql = getInsertStatement<Photo> (SnazzGen.MetaSetTableBytea(PrimaryKey="Id", Table="photographs"))
 // App code:
 // Use the insert SQL
 ```
