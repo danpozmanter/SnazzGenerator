@@ -41,8 +41,8 @@ let sql = getInsertStatement typeof<Photo> (SnazzGen.Meta("Id"))
 // Use the insert SQL
 ```
 
-That's it. It will automatically remove the primary key field ("Id" by default). And if the database is Postgres, ensure "::bytea" is used for binary data.
-While this is fairly performant, it's still advisable not to do the sql generation in a "hot" path, but rather during initialization.
+That's it. It will automatically remove the primary key field in this example: "Id". Optionally you can also set "::bytea" to be used for byte arrays.
+It's still advisable not to do the sql generation in a "hot" path, but rather during initialization.
 
 Supports bulk inserts:
 
