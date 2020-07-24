@@ -1,5 +1,7 @@
 # SnazzGenerator (SnazzGen)
 
+[![Actions Status](https://github.com/danpozmanter/SnazzGenerator/workflows/dotnet/badge.svg)](https://github.com/danpozmanter/SnazzGenerator/actions)
+
 [Dapper](https://github.com/StackExchange/Dapper) is a fast & user friendly light ORM.
 
 SnazzGen is a snazzy generator for SQL to feed to Dapper.
