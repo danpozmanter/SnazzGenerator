@@ -48,7 +48,7 @@ type SnazzGen<'Type>(PrimaryKey:string, ?Table:string, ?SetByteA:bool) =
         let statement = statement.Append("UPDATE " + TableName)
         let fields = List<string>(fields)
         let propSet = List<string>()
-        let pkProp = Dictionary<string, string>()
+        let mutable pkVal = ""
         for prop in props do
             if (prop.Name <> Key) &&
                ((fields.Count = 0) || (fields.Contains prop.Name)) then
@@ -56,7 +56,7 @@ type SnazzGen<'Type>(PrimaryKey:string, ?Table:string, ?SetByteA:bool) =
                 let value = (getValueFromProperty prop ByteA)
                 propSet.Add(field + " = " + value)
             elif (prop.Name = Key) then 
-                pkProp.Add(Key, (getValueFromProperty prop ByteA))
+                pkVal <- (getValueFromProperty prop ByteA)
 
         statement
             .Append(" SET ")
@@ -64,5 +64,5 @@ type SnazzGen<'Type>(PrimaryKey:string, ?Table:string, ?SetByteA:bool) =
             .Append(" WHERE ")
             .Append((transformDotnetNameToSQL Key))
             .Append(" = ")
-            .Append(pkProp.Item(Key))
+            .Append(pkVal)
         |> string
