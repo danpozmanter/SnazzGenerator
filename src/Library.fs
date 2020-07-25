@@ -40,3 +40,29 @@ type SnazzGen<'Type>(PrimaryKey:string, ?Table:string, ?SetByteA:bool) =
             .Append(String.Join(", ", values))
             .Append(")")
         |> string
+
+    member this.buildUpdate (?fields:string[]) =
+        let fields = defaultArg fields [||]
+        let props = typeInstance.GetProperties()
+        let statement = StringBuilder()
+        let statement = statement.Append("UPDATE " + TableName)
+        let fields = List<string>(fields)
+        let propSet = List<string>()
+        let pkProp = Dictionary<string, string>()
+        for prop in props do
+            if (prop.Name <> Key) &&
+               ((fields.Count = 0) || (fields.Contains prop.Name)) then
+                let field = (transformDotnetNameToSQL prop.Name)
+                let value = (getValueFromProperty prop ByteA)
+                propSet.Add(field + " = " + value)
+            elif (prop.Name = Key) then 
+                pkProp.Add(Key, (getValueFromProperty prop ByteA))
+
+        statement
+            .Append(" SET ")
+            .Append(String.Join(", ", propSet))
+            .Append(" WHERE ")
+            .Append((transformDotnetNameToSQL Key))
+            .Append(" = ")
+            .Append(pkProp.Item(Key))
+        |> string

@@ -38,7 +38,7 @@ SnazzGenerator allows you to generate that SQL programmatically through reflecti
 
 ```fsharp
 // Initialization code:
-let sql = SnazzGen<Photo>("Id").getInsertStatement()
+let sql = SnazzGen<Photo>("Id").buildInsert()
 // App code:
 // Use the insert SQL
 ```
@@ -50,7 +50,7 @@ Custom table names:
 
 ```fsharp
 // Initialization code:
-let sql = SnazzGen("Id", "photographs").getInsertStatement()
+let sql = SnazzGen("Id", "photographs").buildInsert()
 // App code:
 // Use the insert SQL
 ```
@@ -59,14 +59,23 @@ Automatically setting "::bytea" for byte[]:
 
 ```fsharp
 // Initialization code:
-let sql = SnazzGen<Photo>("Id", ByteA=true).getInsertStatement()
+let sql = SnazzGen<Photo>("Id", ByteA=true).buildInsert()
 // App code:
 // Use the insert SQL
 ```
 
 ```fsharp
 // Initialization code:
-let sql = SnazzGen<Photo>("Id", "photographs", true).getInsertStatement()
+let sql = SnazzGen<Photo>("Id", "photographs", true).buildInsert()
+// App code:
+// Use the insert SQL
+```
+You can also generate UPDATE statements ahead of time
+
+```fsharp
+// Initialization code:
+let sql = SnazzGen<Photo>("Id").buildUpdate([|"Name", "Author", "Likes"|])
+let sqlAllFields = SnazzGen<Photo>("Id").buildUpdate()
 // App code:
 // Use the insert SQL
 ```

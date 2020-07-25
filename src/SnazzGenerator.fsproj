@@ -2,8 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>SnazzGenerator</PackageId>
+    <Version>0.0.1</Version>
+    <Authors>Dan Pozmanter</Authors>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <Compile Include="Library.fs" />
   </ItemGroup>
