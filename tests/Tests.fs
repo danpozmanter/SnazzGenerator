@@ -1,6 +1,5 @@
 module Tests
 
-open System.Text
 open Xunit
 open SnazzGenerator
 

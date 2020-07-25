@@ -2,9 +2,9 @@
 
 open System
 open System.Collections.Generic
+open System.Reflection
 open System.Text
 open System.Text.RegularExpressions
-open System.Reflection
 
 type SnazzGen<'Type>(PrimaryKey:string, ?Table:string, ?SetByteA:bool) =
     let CamelCasePattern = Regex(@"[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+")
