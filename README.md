@@ -1,6 +1,6 @@
 # SnazzGenerator (SnazzGen)
 
-[![Actions Status](https://github.com/danpozmanter/SnazzGenerator/workflows/dotnet/badge.svg)](https://github.com/danpozmanter/SnazzGenerator/actions)
+[![Actions Status](https://github.com/danpozmanter/SnazzGenerator/workflows/dotnet/badge.svg)](https://github.com/danpozmanter/SnazzGenerator/actions) [![SnazzGenerator](https://img.shields.io/badge/nuget-SnazzGenerator-blue)](https://www.nuget.org/packages/SnazzGenerator/)
 
 [Dapper](https://github.com/StackExchange/Dapper) is a fast & user friendly light ORM.
 
