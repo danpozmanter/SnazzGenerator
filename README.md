@@ -4,17 +4,50 @@
 
 [Dapper](https://github.com/StackExchange/Dapper) is a fast & user friendly light ORM.
 
-SnazzGen is a snazzy generator for SQL to feed to Dapper.
+SnazzGenerator is a snazzy generator for SQL to feed to Dapper.
 
-In general writing raw SQL is the intuitive path forward.
+In general writing raw SQL is the intuitive path forward - especially for queries. But for inserts (and to a lesser degree updates), there's a bit of unwelcome boilerplate. Yet using runtime reflection is expensive. That's where SnazzGenerator comes in.
 
-There is one place where there's a bit of unwelcome boilerplate, and that's managing insert statements.
+## Installation
 
-Let's take an example, a simple Photo object:
+```
+dotnet add package SnazzGenerator
+```
+
+## Usage Guide
 
 ```fsharp
-module Example
+open SnazzGenerator
 
+type Example { ... }
+
+// Initialization code
+let insertSql = SnazzGen<{Type}>("{PrimaryKeyFieldName}", Table="{TableName}", SetByteA={Bool: Use ::bytea notation}).buildInsert()
+let updateSql = SnazzGen<{Type}>("{PrimaryKeyFieldName}", Table="{TableName}", SetByteA={Bool: Use ::bytea notation}).buildUpdate([|string array of field names|])
+let updateSqlAllFields = SnazzGen<{Type}>("{PrimaryKeyFieldName}", Table="{TableName}", SetByteA={Bool: Use ::bytea notation}).buildUpdate()
+
+// Application code (examples with dapper)
+// Insert:
+let example = { ... }
+connection.ExecuteAsync(insertSql, example).Result |> ignore
+
+// Bulk Insert
+let examples = // Generate a list of examples to insert
+connection.ExecuteAsync(insertSql, examples).Result |> ignore
+
+// Update all :
+let updatedExample = { ... }
+// Update just the fields specified above:
+connection.ExecuteAsync(updateSql, updateExample).Result |> ignore
+// Update all the fields
+connection.ExecuteAsync(updateSqlAllFields, updateExample).Result |> ignore
+```
+
+## Examples
+
+Let's start with a simple Photo object:
+
+```fsharp
 type Photo = {
     Id: int;
     Name: string;
@@ -26,15 +59,17 @@ type Photo = {
 }
 ```
 
-The sql you'd need to pass into Dapper:
+Here's the sql you'd need to pass into Dapper for an insert:
 
 ```sql
 INSERT INTO photo(name, author, location, binary_data, comma_separated_tags, likes) VALUES (@Name, @Author, @Location, @BinaryData::bytea, @CommaSeparatedTags, @Likes)
 ```
 
-You can see how a sufficiently large table becomes tedious to write out.
+You can imagine how a sufficiently large table becomes tedious to write out for every type/table.
 
-SnazzGenerator allows you to generate that SQL programmatically through reflection, in idiomatic F#:
+SnazzGenerator allows you to generate that SQL programmatically through reflection:
+
+### Insert
 
 ```fsharp
 // Initialization code:
@@ -59,7 +94,7 @@ Automatically setting "::bytea" for byte[]:
 
 ```fsharp
 // Initialization code:
-let sql = SnazzGen<Photo>("Id", ByteA=true).buildInsert()
+let sql = SnazzGen<Photo>("Id", SetByteA=true).buildInsert()
 // App code:
 // Use the insert SQL
 ```
@@ -70,6 +105,9 @@ let sql = SnazzGen<Photo>("Id", "photographs", true).buildInsert()
 // App code:
 // Use the insert SQL
 ```
+
+### Update
+
 You can also generate UPDATE statements ahead of time
 
 ```fsharp
@@ -79,3 +117,7 @@ let sqlAllFields = SnazzGen<Photo>("Id").buildUpdate()
 // App code:
 // Use the insert SQL
 ```
+
+## License
+
+SnazzGenerator is made available through the Apache License Version 2.0
