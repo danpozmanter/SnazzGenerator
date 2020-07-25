@@ -22,7 +22,7 @@ let ``Mapper generates correct insert SQL`` () =
     Assert.Equal(expected, sql)
 [<Fact>]
 let ``Mapper generates correct insert SQL using bytea`` () =
-    let sql = SnazzGen<Photo>("Id", SetByteA=true).buildInsert()
+    let sql = SnazzGen<Photo>("Id", setByteA=true).buildInsert()
     let expected = "INSERT INTO photo (name, author, location, binary_data, comma_separated_tags, likes) VALUES (@Name, @Author, @Location, @BinaryData::bytea, @CommaSeparatedTags, @Likes)"
     Assert.Equal(expected, sql)
 

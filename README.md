@@ -22,9 +22,9 @@ open SnazzGenerator
 type Example { ... }
 
 // Initialization code
-let insertSql = SnazzGen<{Type}>("{PrimaryKeyFieldName}", Table="{TableName}", SetByteA={Bool: Use ::bytea notation}).buildInsert()
-let updateSql = SnazzGen<{Type}>("{PrimaryKeyFieldName}", Table="{TableName}", SetByteA={Bool: Use ::bytea notation}).buildUpdate([|string array of field names|])
-let updateSqlAllFields = SnazzGen<{Type}>("{PrimaryKeyFieldName}", Table="{TableName}", SetByteA={Bool: Use ::bytea notation}).buildUpdate()
+let insertSql = SnazzGen<{Type}>("{PrimaryKeyFieldName}", table="{tableName}", setByteA={Bool: Use ::bytea notation}).buildInsert()
+let updateSql = SnazzGen<{Type}>("{PrimaryKeyFieldName}", table="{tableName}", setByteA={Bool: Use ::bytea notation}).buildUpdate([|string array of propery names|])
+let updateSqlAllFields = SnazzGen<{Type}>("{PrimaryKeyFieldName}", table="{tableName}", setByteA={Bool: Use ::bytea notation}).buildUpdate()
 
 // Application code (examples with dapper)
 // Insert:
@@ -94,7 +94,7 @@ Automatically setting "::bytea" for byte[]:
 
 ```fsharp
 // Initialization code:
-let sql = SnazzGen<Photo>("Id", SetByteA=true).buildInsert()
+let sql = SnazzGen<Photo>("Id", setByteA=true).buildInsert()
 // App code:
 // Use the insert SQL
 ```
