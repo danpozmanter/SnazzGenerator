@@ -22,9 +22,9 @@ open SnazzGenerator
 type Example { ... }
 
 // Initialization code
-let insertSql = SnazzGen<{Type}>("{PrimaryKeyFieldName}", table="{tableName}", setByteA={Bool: Use ::bytea notation}).buildInsert()
-let updateSql = SnazzGen<{Type}>("{PrimaryKeyFieldName}", table="{tableName}", setByteA={Bool: Use ::bytea notation}).buildUpdate([|string array of propery names|])
-let updateSqlAllFields = SnazzGen<{Type}>("{PrimaryKeyFieldName}", table="{tableName}", setByteA={Bool: Use ::bytea notation}).buildUpdate()
+let insertSql = SnazzGen<{Type}>(primaryKey="{PrimaryKeyFieldName}", table="{tableName}", setByteA={Bool: Use ::bytea notation}).buildInsert()
+let updateSql = SnazzGen<{Type}>(primaryKey="{PrimaryKeyFieldName}", table="{tableName}", setByteA={Bool: Use ::bytea notation}).buildUpdate([|string array of propery names|])
+let updateSqlAllFields = SnazzGen<{Type}>(primaryKey="{PrimaryKeyFieldName}", table="{tableName}", setByteA={Bool: Use ::bytea notation}).buildUpdate()
 
 // Application code (examples with dapper)
 // Insert:
@@ -73,7 +73,7 @@ SnazzGenerator allows you to generate that SQL programmatically through reflecti
 
 ```fsharp
 // Initialization code:
-let sql = SnazzGen<Photo>("Id").buildInsert()
+let sql = SnazzGen<Photo>().buildInsert()
 // App code:
 // Use the insert SQL
 ```

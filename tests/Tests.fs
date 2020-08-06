@@ -20,6 +20,14 @@ let ``Mapper generates correct insert SQL`` () =
     let sql = SnazzGen<Photo>("Id").buildInsert()
     let expected = "INSERT INTO photo (name, author, location, binary_data, comma_separated_tags, likes) VALUES (@Name, @Author, @Location, @BinaryData, @CommaSeparatedTags, @Likes)"
     Assert.Equal(expected, sql)
+
+[<Fact>]
+let ``Mapper generates correct insert SQL with default primary key`` () =
+    let sql = SnazzGen<Photo>().buildInsert()
+    let expected = "INSERT INTO photo (name, author, location, binary_data, comma_separated_tags, likes) VALUES (@Name, @Author, @Location, @BinaryData, @CommaSeparatedTags, @Likes)"
+    Assert.Equal(expected, sql)
+
+
 [<Fact>]
 let ``Mapper generates correct insert SQL using bytea`` () =
     let sql = SnazzGen<Photo>("Id", setByteA=true).buildInsert()

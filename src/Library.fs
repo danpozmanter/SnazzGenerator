@@ -6,14 +6,14 @@ open System.Reflection
 open System.Text
 open System.Text.RegularExpressions
 
-type SnazzGen<'Type>(primaryKey:string, ?table:string, ?setByteA:bool) =
+type SnazzGen<'Type>(?primaryKey:string, ?table:string, ?setByteA:bool) =
     // DotNetCasing -> sql_casing:
     let CamelCasePattern = Regex(@"[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+")
     let transformDotnetNameToSQL (propertyName:string) =
         String.Join("_", CamelCasePattern.Matches(propertyName)).ToLower()
     // Type and primary data points
     let typeInstance = typeof<'Type> // required
-    let primaryKey = primaryKey // required
+    let primaryKey = defaultArg primaryKey "Id"
     let tableName = defaultArg table (transformDotnetNameToSQL typeInstance.Name)
     // Use ::bytea notation, eg "@BinaryField::bytea":
     let setByteA = defaultArg setByteA false
