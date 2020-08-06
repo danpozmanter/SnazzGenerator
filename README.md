@@ -22,9 +22,9 @@ open SnazzGenerator
 type Example { ... }
 
 // Initialization code
-let insertSql = SnazzGen<{Type}>(primaryKey="{PrimaryKeyFieldName}", table="{tableName}", setByteA={Bool: Use ::bytea notation}).buildInsert()
-let updateSql = SnazzGen<{Type}>(primaryKey="{PrimaryKeyFieldName}", table="{tableName}", setByteA={Bool: Use ::bytea notation}).buildUpdate([|string array of propery names|])
-let updateSqlAllFields = SnazzGen<{Type}>(primaryKey="{PrimaryKeyFieldName}", table="{tableName}", setByteA={Bool: Use ::bytea notation}).buildUpdate()
+let insertSql = SnazzGen<{Type}>(primaryKey="{PrimaryKeyFieldName}", table="{tableName}", setByteA={Bool: Use ::bytea notation}).BuildInsert()
+let updateSql = SnazzGen<{Type}>(primaryKey="{PrimaryKeyFieldName}", table="{tableName}", setByteA={Bool: Use ::bytea notation}).BuildUpdate([|string array of propery names|])
+let updateSqlAllFields = SnazzGen<{Type}>(primaryKey="{PrimaryKeyFieldName}", table="{tableName}", setByteA={Bool: Use ::bytea notation}).BuildUpdate()
 
 // Application code (examples with dapper)
 // Insert:
@@ -73,7 +73,7 @@ SnazzGenerator allows you to generate that SQL programmatically through reflecti
 
 ```fsharp
 // Initialization code:
-let sql = SnazzGen<Photo>().buildInsert()
+let sql = SnazzGen<Photo>().BuildInsert()
 // App code:
 // Use the insert SQL
 ```
@@ -85,7 +85,7 @@ Custom table names:
 
 ```fsharp
 // Initialization code:
-let sql = SnazzGen("Id", "photographs").buildInsert()
+let sql = SnazzGen("Id", "photographs").BuildInsert()
 // App code:
 // Use the insert SQL
 ```
@@ -94,14 +94,14 @@ Automatically setting "::bytea" for byte[]:
 
 ```fsharp
 // Initialization code:
-let sql = SnazzGen<Photo>("Id", setByteA=true).buildInsert()
+let sql = SnazzGen<Photo>("Id", setByteA=true).BuildInsert()
 // App code:
 // Use the insert SQL
 ```
 
 ```fsharp
 // Initialization code:
-let sql = SnazzGen<Photo>("Id", "photographs", true).buildInsert()
+let sql = SnazzGen<Photo>("Id", "photographs", true).BuildInsert()
 // App code:
 // Use the insert SQL
 ```
@@ -112,8 +112,8 @@ You can also generate UPDATE statements ahead of time
 
 ```fsharp
 // Initialization code:
-let sql = SnazzGen<Photo>("Id").buildUpdate([|"Name", "Author", "Likes"|])
-let sqlAllFields = SnazzGen<Photo>("Id").buildUpdate()
+let sql = SnazzGen<Photo>("Id").BuildUpdate([|"Name", "Author", "Likes"|])
+let sqlAllFields = SnazzGen<Photo>("Id").BuildUpdate()
 // App code:
 // Use the insert SQL
 ```

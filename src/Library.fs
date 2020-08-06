@@ -8,9 +8,9 @@ open System.Text.RegularExpressions
 
 type SnazzGen<'Type>(?primaryKey:string, ?table:string, ?setByteA:bool) =
     // DotNetCasing -> sql_casing:
-    let CamelCasePattern = Regex(@"[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+")
+    let camelCasePattern = Regex(@"[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+")
     let transformDotnetNameToSQL (propertyName:string) =
-        String.Join("_", CamelCasePattern.Matches(propertyName)).ToLower()
+        String.Join("_", camelCasePattern.Matches(propertyName)).ToLower()
     // Type and primary data points
     let typeInstance = typeof<'Type> // required
     let primaryKey = defaultArg primaryKey "Id"
@@ -25,7 +25,7 @@ type SnazzGen<'Type>(?primaryKey:string, ?table:string, ?setByteA:bool) =
             else
                 "@" + property.Name
 
-    member this.buildInsert () =
+    member this.BuildInsert () =
         // Build an insert statement from type properties
         let props = typeInstance.GetProperties()
         let statement = StringBuilder()
@@ -44,7 +44,7 @@ type SnazzGen<'Type>(?primaryKey:string, ?table:string, ?setByteA:bool) =
             .Append(")")
         |> string
 
-    member this.buildUpdate (?propertyNames:string[]) =
+    member this.BuildUpdate (?propertyNames:string[]) =
         // Build an update statement from type properties
         // Optionally specify particular fields to apply 
         let propertyNames = defaultArg propertyNames [||]
