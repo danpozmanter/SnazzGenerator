@@ -18,9 +18,9 @@ type SnazzGen<'Type>(?primaryKey:string, ?table:string, ?setByteA:bool) =
     // Use ::bytea notation, eg "@BinaryField::bytea":
     let setByteA = defaultArg setByteA false
 
-    let getValueFromProperty (property:PropertyInfo) (bytea:bool) =
+    let getValueFromProperty (property:PropertyInfo) =
             // Using Dapper compatible syntax:
-            if bytea && (property.PropertyType = typeof<Byte[]>) then
+            if setByteA && (property.PropertyType = typeof<Byte[]>) then
                 "@" + property.Name + "::bytea"
             else
                 "@" + property.Name
@@ -35,7 +35,7 @@ type SnazzGen<'Type>(?primaryKey:string, ?table:string, ?setByteA:bool) =
         for prop in props do
             if prop.Name <> primaryKey then
                 fields.Add(transformDotnetNameToSQL prop.Name)
-                values.Add(getValueFromProperty prop setByteA)
+                values.Add(getValueFromProperty prop)
         statement
             .Append(" (")
             .Append(String.Join(", ", fields))
@@ -58,10 +58,10 @@ type SnazzGen<'Type>(?primaryKey:string, ?table:string, ?setByteA:bool) =
             if (prop.Name <> primaryKey) &&
                ((propertyNames.Count = 0) || (propertyNames.Contains prop.Name)) then
                 let field = (transformDotnetNameToSQL prop.Name)
-                let value = (getValueFromProperty prop setByteA)
+                let value = (getValueFromProperty prop)
                 propSet.Add(field + " = " + value)
             elif (prop.Name = primaryKey) then 
-                pkVal <- (getValueFromProperty prop setByteA) // set the primary key
+                pkVal <- (getValueFromProperty prop) // set the primary key
         statement
             .Append(" SET ")
             .Append(String.Join(", ", propSet))
